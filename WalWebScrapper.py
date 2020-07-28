@@ -148,7 +148,7 @@ sortedFile = a_file[pd.to_numeric(a_file['Price'], errors='coerce').notnull()]
 sortedFile['Price'] = sortedFile['Price'].astype(float)
 #convert Price column to float otherwise lexsorted result
 sortedFile.Price = sortedFile.Price.astype(float)
-sortedFile.sort_values("Price", axis = 0, ascending = True,inplace = True, na_position ='last')
+sortedFile.sort_values("Price", axis = 0, ascending = False,inplace = True, na_position ='last')
 #-- end of clean up ------
 
 #before saving new csv localy , compare prices betwen prev results and new results
