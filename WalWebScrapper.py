@@ -106,8 +106,9 @@ def comparePricesSendEmail(prevCSV,newCSV):
 		pass
 	else:
 		EMAIL_ADDRESS = 'njdevil707@gmail.com'
-		#print("enter pword for ", EMAIL_ADDRESS , ":")
-		EMAIL_PASSWORD = ''
+		print("enter pword for ", EMAIL_ADDRESS , ":")
+
+		EMAIL_PASSWORD = input()
 		contacts = ['jesusg714@gmail.com']
 		msg = EmailMessage()
 		msg['Subject'] = 'Prices have changed'
