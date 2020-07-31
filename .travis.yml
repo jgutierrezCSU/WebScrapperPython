@@ -1,16 +1,11 @@
-language: python
-python:
-  - 2.7
-  - 3.5
-  - 3.0
-  - 3
-before_install:
-  - python --version
-  - pip install -U pip
-  - pip install -U pytest
-  - pip install codecov
-install:
-  - pip install ".[test]" . # install package + test dependencies
-script: pytest # run tests
-after_success:
-  - codecov # submit coverage
+dist: xenial
+env:
+  global:
+    - PATH=/opt/python/3.7.1/bin:$PATH
+script:
+  - python -VV
+  - python3 -VV
+  - pip -V
+  - pip3 -V
+  - python3 -m pip install awscli
+  - aws help
