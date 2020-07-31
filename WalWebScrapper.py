@@ -9,10 +9,17 @@ import smtplib
 import imghdr
 from email.message import EmailMessage
 import pandas as pd
+import email, ssl
+
+from email import encoders
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 
 
 subprocess.call(['touch', 'lab9seven.csv'])
-MAX = 300.00
+MAX = 300.00 # set maximum price
 url_list = []
 item_list = []
 page_counter = 0
@@ -23,7 +30,7 @@ homepage = 'https://www.walmart.com/search/?query=sony%20%20headphones'
 landing = requests.get(homepage)
 content = landing.content
 firstsoup = BeautifulSoup(content, 'lxml')
-num_results = firstsoup.find('div',{'class':'result-summary-container'}).text #gets the div tag w/ num of results
+num_results = firstsoup.find('div',{'class':'result-summary-container'}).get_text() #gets the div tag w/ num of results
 count = str(num_results)
 tot_count = count[-11:-8]
 page_count = int(int(tot_count)/10)-3
@@ -42,7 +49,7 @@ for url in url_list:
 		item_counter = item_counter + 1
 		mytuple = ()
 		# to get the item name
-		title = page.find('a', {'class': 'product-title-link'}).text
+		title = page.find('a', {'class': 'product-title-link'}).get_text()
 		print('title :',title)
 		if re.search('Noise', title, re.IGNORECASE):
 			mytuple = mytuple + (title,)
@@ -53,7 +60,7 @@ for url in url_list:
  			mytuple = mytuple + ('No Price Available',)
 		else:
 			if price_summary.find('span', {'class': 'price-main-block'}) is not None:
-				price = price_summary.find('span', {'class': 'price-main-block'}).text
+				price = price_summary.find('span', {'class': 'price-main-block'}).get_text()
 				reg_price =re.search("\d+\.\d{1,2}",price)
 				if(reg_price): #making sure array is not empty
 					a_price=float(reg_price[0])# reg ex stores results in array. get first integer found
@@ -65,7 +72,7 @@ for url in url_list:
 		#item rating
 		
 		# <span class="visuallyhidden seo-avg-rating">3.8</span>
-		initial_rating = page.find('span', {'class' : 'visuallyhidden seo-avg-rating'}).text
+		initial_rating = page.find('span', {'class' : 'visuallyhidden seo-avg-rating'}).get_text()
 		
 		rating = initial_rating
 		rating=re.search("(-?[0-9]+(?:[,.][0-9]+)?)",rating)# get int or double
@@ -81,7 +88,7 @@ for url in url_list:
 		#reviews = page.find('span', {'class' : 'stars-reviews font-normal'})
 		#updated
 		if page.find('span', {'class' : 'seo-review-count visuallyhidden'}) is not None:
-			reviews = page.find('span', {'class' : 'seo-review-count visuallyhidden'}).text 
+			reviews = page.find('span', {'class' : 'seo-review-count visuallyhidden'}).get_text()
 			print('REV',reviews)
 		#reviews = initial_rating[38:]# get a small chuck of string w/ reviews
 		#reviews=re.search("[0-9]+",reviews) # get integers from that chunk
@@ -97,18 +104,22 @@ for url in url_list:
 			break
 
 def comparePricesSendEmail(prevCSV,newCSV):
-	
-	prevCSV=prevCSV.head(5)
-	newCSV=newCSV.head(5)
-	print('Prev Top 5 : ',prevCSV)
-	print('New Top 5 : ',newCSV)
+	head_lim=10
+	prevCSV=prevCSV.head(head_lim)
+	newCSV=newCSV.head(head_lim)
+	print('Prev Top',head_lim,' : ',prevCSV)
+	print('New Top',head_lim,' : ',newCSV)
 	if prevCSV.equals(newCSV):
 		pass
 	else:
 		EMAIL_ADDRESS = 'njdevil707@gmail.com'
-		print("enter pword for ", EMAIL_ADDRESS , ":")
+		#print("enter pword for ", EMAIL_ADDRESS , ":")
 
-		EMAIL_PASSWORD = input()
+		#EMAIL_PASSWORD = input()
+		read_pword = open("ep.txt","r")
+		EMAIL_PASSWORD=read_pword.readline()
+
+		fname="Top10ByPrice.csv"
 		contacts = ['jesusg714@gmail.com']
 		msg = EmailMessage()
 		msg['Subject'] = 'Prices have changed'
@@ -127,6 +138,25 @@ def comparePricesSendEmail(prevCSV,newCSV):
 		</html>
 		""", subtype='html')
 
+		#for attachments
+		body = "The Prices have changed"
+		msg.attach(MIMEText(body, "plain"))
+		with open(fname, "rb") as attachment:
+		# Add file as application/octet-stream
+		# Email client can usually download this automatically as attachment
+			part = MIMEBase("application", "octet-stream")
+			part.set_payload(attachment.read())
+
+		# Encode file in ASCII characters to send by email
+		encoders.encode_base64(part)
+		# Add header as key/value pair to attachment part
+		part.add_header(
+			"Content-Disposition",
+			f"attachment; filename= {fname}",
+		)
+		# Add attachment to message and convert message to string
+		msg.attach(part)
+		text = msg.as_string()
 
 		with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
 		    smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
@@ -153,14 +183,15 @@ sortedFile.sort_values("Price", axis = 0, ascending = False,inplace = True, na_p
 
 #before saving new csv localy , compare prices betwen prev results and new results
 #get prev csv results
-#sortedFile.to_csv('lab9seven.csv') # uncomment for first time running program
-prevCSVFile = pd.read_csv("lab9seven.csv")
+#sortedFile.to_csv('Top10ByPrice.csv') # uncomment for first time running program
+prevCSVFile = pd.read_csv("Top10ByPrice.csv")
 prevCSVFile=prevCSVFile.set_index('Title') # remove deafult index 
 newCSVFile =sortedFile
+prevCSVFile.to_csv('Prev10ByPrice.csv')
 
-# functions compares top 5 results if false , send email w/ new changes
+# functions compares top 10 results if false , send email w/ new changes
 comparePricesSendEmail(prevCSVFile,newCSVFile)
 
-sortedFile.to_csv('lab9seven.csv')
+sortedFile.to_csv('Top10ByPrice.csv')
 
 
