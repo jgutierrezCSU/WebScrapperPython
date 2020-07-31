@@ -9,12 +9,13 @@ import smtplib
 import imghdr
 from email.message import EmailMessage
 import pandas as pd
-import email, ssl
+import email
 
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
 
 
 
@@ -26,7 +27,15 @@ page_counter = 0
 item_counter = 0
 max_item_counter = 30
 
-homepage = 'https://www.walmart.com/search/?query=sony%20%20headphones'
+# get user input
+print('Search: ')
+tmp=input()
+
+#URL encoding convertion (setting to Percent Encoding)
+search_cri=tmp.replace(" ", "%20")
+homepage='https://www.walmart.com/search/?query='+search_cri
+
+#homepage = 'https://www.walmart.com/search/?query=sony%20%20headphones'
 landing = requests.get(homepage)
 content = landing.content
 firstsoup = BeautifulSoup(content, 'lxml')
@@ -36,7 +45,7 @@ tot_count = count[-11:-8]
 page_count = int(int(tot_count)/10)-3
 for i in range(1,page_count):
 	print('found',i)
-	url_list.append('https://www.walmart.com/search/?page=' + str(i) + '&ps=10&query=sony%20%20headphones')
+	url_list.append('https://www.walmart.com/search/?page=' + str(i) + '&ps=10&query='+search_cri)
 for url in url_list:
 	page_counter = page_counter + 1
 	result = requests.get(url)
