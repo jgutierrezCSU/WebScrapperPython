@@ -41,8 +41,19 @@ content = landing.content
 firstsoup = BeautifulSoup(content, 'lxml')
 num_results = firstsoup.find('div',{'class':'result-summary-container'}).get_text() #gets the div tag w/ num of results
 count = str(num_results)
-tot_count = count[-11:-8]
+
+#tot_count = count[-11:-8]
+
+#place all ints into list and get last item as total results
+tmp_count=re.findall(r'\d+', num_results)
+tot_count=tmp_count[-1]
+
+print(tot_count)
+
 page_count = int(int(tot_count)/10)-3
+if page_count < 0:
+	page_count =2
+print(page_count)
 for i in range(1,page_count):
 	print('found',i)
 	url_list.append('https://www.walmart.com/search/?page=' + str(i) + '&ps=10&query='+search_cri)
@@ -52,6 +63,7 @@ for url in url_list:
 	c = result.content
 	soup = BeautifulSoup(c, 'lxml')
 	summary = soup.find('ul', {'class':'search-result-gridview-items four-items'}) #gets the grid view of results
+	print(summary)
 	page_list = summary.findAll('li')
 
 	for page in page_list:
