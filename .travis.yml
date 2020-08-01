@@ -1,0 +1,11 @@
+dist: xenial
+env:
+  global:
+    - PATH=/opt/python/3.7.1/bin:$PATH
+script:
+  - python -VV
+  - python3 -VV
+  - pip -V
+  - pip3 -V
+  - python3 -m pip install awscli
+  - aws help
