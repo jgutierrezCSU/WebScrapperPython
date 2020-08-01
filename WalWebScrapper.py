@@ -62,9 +62,17 @@ for url in url_list:
 	result = requests.get(url)
 	c = result.content
 	soup = BeautifulSoup(c, 'lxml')
+	#get summary for grid views
 	summary = soup.find('ul', {'class':'search-result-gridview-items four-items'}) #gets the grid view of results
-	print(summary)
-	page_list = summary.findAll('li')
+	if summary is not None:
+		page_list = summary.findAll('li')
+	#get summary for list view
+	if summary is None:
+		summary = soup.find('div', {'class':'search-result-listview-item Grid primary-recall-no-top-border'}) #gets the grid view of results
+		print(summary)
+		page_list = summary.findAll('div')
+	
+	
 
 	for page in page_list:
 		item_counter = item_counter + 1
