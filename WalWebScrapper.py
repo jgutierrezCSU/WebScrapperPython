@@ -71,24 +71,25 @@ for url in url_list:
 	#if not grid then List
 	#get summary for list view
 	if summary is None:
-		summary = soup.find('div', {'class':'search-result-listview-item Grid primary-recall-no-top-border'}) #gets the grid view of results
+		summary = soup.find('div', {'class':'search-result-listview-items'}) #gets the grid view of results
 		#print(summary)
 		page_list = summary.findAll('div')
-	
+
 	
 
 	for page in page_list:
 
-		print(page)
+		#print(page)
+		print(page_list)
 		print('X')
 		item_counter = item_counter + 1
 		mytuple = ()
 		# to get the item name
 		title = page.find('a', {'class': 'product-title-link'}).get_text()
-		if title is not None:
+		if title is not None and re.search('Noise', title, re.IGNORECASE):
 			print('title :',title)
-			if re.search('Noise', title, re.IGNORECASE):
-				mytuple = mytuple + (title,)
+		
+			mytuple = mytuple + (title,)
 
 	 		# to get the item price
 			price_summary = page.find('span', {'class' : 'search-result-productprice gridview enable-2price-2'})
@@ -107,7 +108,6 @@ for url in url_list:
 
 			#item rating
 			
-			# <span class="visuallyhidden seo-avg-rating">3.8</span>
 			initial_rating = page.find('span', {'class' : 'visuallyhidden seo-avg-rating'}).get_text()
 			
 			rating = initial_rating
@@ -115,8 +115,7 @@ for url in url_list:
 			print(rating[0])
 			rating=rating[0] + " out of 5"
 			
-			if re.search('Noise', title, re.IGNORECASE):
-				mytuple = mytuple + (rating,)
+			mytuple = mytuple + (rating,)
 			
 			#get Reviews-------
 			
@@ -129,12 +128,10 @@ for url in url_list:
 			#reviews = initial_rating[38:]# get a small chuck of string w/ reviews
 			#reviews=re.search("[0-9]+",reviews) # get integers from that chunk
 			#reviews=reviews[0] # reg ex stores results in array. get first integer found
-			if re.search('Noise', title, re.IGNORECASE):
-				mytuple = mytuple + (reviews,)
-			
-			if re.search('Noise', title, re.IGNORECASE):
-				
-				item_list.append(mytuple)
+
+			mytuple = mytuple + (reviews,)
+							
+			item_list.append(mytuple)
 
 			if item_counter >= max_item_counter:
 				break
