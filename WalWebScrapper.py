@@ -27,7 +27,7 @@ page_counter = 0
 item_counter = 0
 max_item_counter = 30
 
-# get user input
+# get users input
 print('Search: ')
 tmp=input()
 
