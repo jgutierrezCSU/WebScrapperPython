@@ -28,7 +28,7 @@ item_counter = 0
 max_item_counter = 30
 
 # get users input
-print('Search: ')
+print('Search Item: ')
 tmp=input()
 
 #URL encoding convertion (setting to Percent Encoding)
