@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/jgutierrezCSU/WebScrapperPython.svg?branch=master)](https://travis-ci.org/jgutierrezCSU/WebScrapperPython)
+
 Web Scrapper using python :
 As of now it is dedicated to scrape Walmart website.
 Additionally It compares previous "scrapes" , if the prices have changed it will send an email.
