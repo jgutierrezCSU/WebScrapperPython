@@ -8,3 +8,4 @@ UPDATE:
 Walmart site is ever changing, this code works fine as long as some code is adjusted (usualy changing the way you get tags and HTML code).
 Overall it a great structure to get started with Web Scrapping
 
+UPDATE: Walmart has Forbidden webscrapper, next step is to focus on different site.
