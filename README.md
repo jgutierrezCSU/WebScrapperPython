@@ -3,6 +3,13 @@
 Web Scrapper using python :
 As of now it is dedicated to scrape Walmart website.
 
+Features:
+Scrape website and filter results using a key word.
+Scrape multiple pages.
+Sorts by price using Pandas.
+Creates a local CSV and compares Results. If prices have changes, Sends an email.
+
+
 Example:
 I search walmart for Sony headphones. The pattern being “noise” wich will filter the results and grabbing any items which are noise canceling head phones.
 I used multiple regular expressions to extract data. Line 54 I use reg ex to find the price. Additionally in line 64 to get the rating which could be an int or a double. Once the results were filters and extracted, I placed them in a list. From that list , I then used pandas to sort and clean the data and place it to a local csv.
