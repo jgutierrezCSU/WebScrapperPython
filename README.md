@@ -10,7 +10,7 @@ Additionally It compares previous "scrapes" with new "scrape", if the prices hav
 
 RESULTS:
 
-![alt text](https://github.com/jgutierrezCSU/WebScrapperPython/tree/master/photos/snip1.png?raw=true)
+![alt text](https://github.com/jgutierrezCSU/WebScrapperPython/blob/master/photos/snip1.png?raw=true)
 
 
 
