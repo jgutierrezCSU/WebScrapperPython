@@ -149,7 +149,7 @@ def comparePricesSendEmail(prevCSV,newCSV):
 	if prevCSV.equals(newCSV):
 		pass
 	else:
-		EMAIL_ADDRESS = 'njdevil707@gmail.com'
+		EMAIL_ADDRESS = 'anemeailadd@gmail.com'
 		#print("enter pword for ", EMAIL_ADDRESS , ":")
 
 		#EMAIL_PASSWORD = input()
@@ -157,11 +157,11 @@ def comparePricesSendEmail(prevCSV,newCSV):
 		EMAIL_PASSWORD=read_pword.readline()
 
 		fname="Top10ByPrice.csv"
-		contacts = ['jesusg714@gmail.com']
+		contacts = ['anemeailadd714@gmail.com']
 		msg = EmailMessage()
 		msg['Subject'] = 'Prices have changed'
 		msg['From'] = EMAIL_ADDRESS
-		msg['To'] = 'jesusg714@gmail.com'
+		msg['To'] = 'anemeailadd714@gmail.com'
 		msg.set_content('File attached...')
 		#send HTML
 		msg.set_content('This is a plain text email')
